@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Test JS</title>
+		
+		<style>
+			* {margin: 0; padding: 0;}
+
+			#myDiv {
+				position: fixed; 
+				z-index: -1;
+				background: url(/Users/Kyle/Downloads/house_on_the_rock_library-wallpaper-3840x2400.jpg); 
+				background-size: cover; width: 100%;
+			}
+			#secondDiv {background-color: purple; position: absolute; width: 100%;}
+			
+			.container {width: 1200px; margin: 0 auto; overflow: auto; box-sizing: border-box; transition: all 1s;}
+			.row {margin-left: -15px; margin-right:-15px; box-sizing: border-box;}
+			.col-4:after {clear: both;}
+			.col-4 {width: 25%; padding: 0; float: left; box-sizing: border-box;}
+			.nav-rectangle .col-4 {padding: 0;}
+			.nav-box .box {width: 200px; height: 200px; margin: 0 auto; transition: width 1s, height 1s;}
+			.nav-rectangle .box {width: 100%; height: 100px; border-radius: 0 !important; transition: all 2s;}
+			.nav-rectangle {position: fixed; top: -50px; width: inherit;}
+			.sticky-nav {margin-top: 0 !important;}
+			#nav {z-index: 1;}
+
+			#fish {background: url(bubbles3.png); position: fixed; width: 250px; height: 250px; top: 400px; left: -250px;}
+			
+			.box.yellow {background: yellow;}
+			.blue {background: blue;}
+			.green {background: green;}
+			.red {background: red;}
+
+			/*
+			.nav-rectangle .yellow {background: linear-gradient(to right, yellow, blue);}
+			.nav-rectangle .blue {background: linear-gradient(to right, blue, green);}
+			.nav-rectangle .green {background: linear-gradient(to right, green, red);}
+			.nav-rectangle .red {background: linear-gradient(to right, red, yellow);} */
+		</style>
+	</head>
+	<body>
+		<div id="myDiv">
+			
+		</div>
+		<div id="fish">
+
+		</div>
+		<div class="full-tile">
+			<div class="container">
+				<div id="nav" class="nav-box row">
+					<div class="col-4">
+						<div class="box yellow"></div>
+					</div>
+					<div class="col-4">
+						<div class="box blue"></div>
+					</div>
+					<div class="col-4">
+						<div class="box green"></div>
+					</div>
+					<div class="col-4">
+						<div class="box red"></div>
+					</div><div id="anchor" style="clear: both;"></div>
+				</div>
+			</div>
+		</div>
+		<div id="secondDiv" class="full-tile">
+		<script>
+			var windowHeight = window.innerHeight;
+			var blocksMargin = window.innerHeight / 2 - 100;
+			
+			document.getElementById("myDiv").style.height = windowHeight + "px";
+			document.getElementById("secondDiv").style.height = windowHeight + "px";			
+			document.getElementById("nav").style.marginTop = blocksMargin + "px";
+
+			var tiles = document.getElementsByClassName("full-tile");
+
+			for (var i = 0; i < tiles.length; i++)
+			{
+				tiles[i].style.height = windowHeight + "px";
+			}
+			
+			var hasPassed = false;
+
+			window.onscroll = function() {
+
+				if(window.scrollY > blocksMargin + 50)
+				{
+					document.getElementById("nav").setAttribute("class", "nav-rectangle");
+					document.getElementById("nav").removeAttribute("style");
+				}
+				else
+				{
+					document.getElementById("nav").setAttribute("class", "nav-box");
+					document.getElementById("nav").style.marginTop = blocksMargin + "px";
+				}
+			};
+
+			window.requestAnimationFrame = window.requestAnimationFrame
+			 || window.mozRequestAnimationFrame
+			 || window.webkitRequestAnimationFrame
+			 || window.msRequestAnimationFrame
+			 || function(f){setTimeout(f, 1000/60)};
+			 
+			var myDiv = document.getElementById('myDiv');
+			var secondDiv = document.getElementById('secondDiv');
+			var nav = document.getElementById('nav');
+			var fish = document.getElementById('fish');
+			var boxes = document.getElementsByClassName("box");
+
+			function moveTiles(){
+				var scrollTop = window.pageYOffset // get number of pixels document has scrolled vertically 
+				if (scrollTop > blocksMargin)
+			 		myDiv.style.top = -scrollTop * .2 + blocksMargin * .2 + 'px'; // move bubble1 at 20% of scroll rate
+			 	
+			 	fish.style.left = scrollTop * 2 - 250 + 'px';
+			 	if (scrollTop < blocksMargin)
+			 	{
+			 		nav.style.top = -scrollTop * .5 + 'px'; // move bubble2 at 50% of scroll rate
+
+			 		for (var i = 0; i < boxes.length; i++) 
+			 		{
+			 			//boxes[i].style.borderRadius = scrollTop / blocksMargin * 100 / 2 + "%";
+			 			boxes[i].style.width = 200 + scrollTop / blocksMargin * 100 + "px";
+			 			boxes[i].style.height = 200 - scrollTop / blocksMargin * 100 + "px";
+			 		}
+			 	}
+			}
+			 
+			window.addEventListener('scroll', function(){ // on page scroll
+			 	requestAnimationFrame(moveTiles); // call parallaxbubbles() on next available screen paint
+			}, false)
+		</script>
+	</body>
+</html>
