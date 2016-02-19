@@ -12,8 +12,9 @@
 				background: url(/Users/Kyle/Downloads/house_on_the_rock_library-wallpaper-3840x2400.jpg); 
 				background-size: cover; width: 100%;
 			}
-			#secondDiv {background-color: purple; position: absolute; width: 100%;}
-			
+			#secondDiv {background: url(background.png) repeat-x; background-size: cover; width: 100%;}
+			.fixed-tile {position: fixed; top: 0; left: 0; width: 100%;}
+			.move-tile {background-position: 50%; transition: all 2s;}
 			.container {width: 1200px; margin: 0 auto; overflow: auto; box-sizing: border-box; transition: all 1s;}
 			.row {margin-left: -15px; margin-right:-15px; box-sizing: border-box;}
 			.col-4:after {clear: both;}
@@ -25,7 +26,7 @@
 			.sticky-nav {margin-top: 0 !important;}
 			#nav {z-index: 1;}
 
-			#fish {background: url(bubbles3.png); position: fixed; width: 250px; height: 250px; top: 400px; left: -250px;}
+			#fish {background: url(bubbles3.png); position: fixed; width: 250px; height: 250px; top: 400px; left: -250px; z-index: 100;}
 			
 			.box.yellow {background: yellow;}
 			.blue {background: blue;}
@@ -64,7 +65,12 @@
 				</div>
 			</div>
 		</div>
-		<div id="secondDiv" class="full-tile">
+		<div id="secondDiv" class="full-tile"></div>
+		<div id="thirdDiv" class="full-tile"></div>
+		<div class="full-tile" style="background: yellow;"></div>
+		<div class="full-tile" style="background: blue;"></div>
+		<div class="full-tile" style="background: green;"></div>
+		<div class="full-tile" style="background: red;"></div>
 		<script>
 			var windowHeight = window.innerHeight;
 			var blocksMargin = window.innerHeight / 2 - 100;
@@ -104,14 +110,45 @@
 			 
 			var myDiv = document.getElementById('myDiv');
 			var secondDiv = document.getElementById('secondDiv');
+			var thirdDiv = document.getElementById('thirdDiv');
 			var nav = document.getElementById('nav');
 			var fish = document.getElementById('fish');
 			var boxes = document.getElementsByClassName("box");
 
 			function moveTiles(){
+				// TODO: Need a method to calculate javascript by page tile and make sure it only runs once.
 				var scrollTop = window.pageYOffset // get number of pixels document has scrolled vertically 
+				var numberOfTiles = document.getElementsByClassName("full-tile").length;
+				var startingPixel = 0;
+
+				
+				for (var i = 1; i <= numberOfTiles; i++)
+				{
+					console.log("Tile Number: " + i + "\nStart: " + startingPixel + "\nEnd: " + windowHeight * i + "\n\n");
+					if (i == 1)
+						startingPixel += windowHeight + 1;
+					else
+						startingPixel += windowHeight;
+				}
+
+				/*
+				if (scrollTop < blocksMargin) {
+
+				}
+				else if () {
+
+				}
+				else if () {
+
+				} */
+
+
+				/*
 				if (scrollTop > blocksMargin)
 			 		myDiv.style.top = -scrollTop * .2 + blocksMargin * .2 + 'px'; // move bubble1 at 20% of scroll rate
+			 	*/
+
+			 	myDiv.style.top = -scrollTop * .2 + 'px';
 			 	
 			 	fish.style.left = scrollTop * 2 - 250 + 'px';
 			 	if (scrollTop < blocksMargin)
@@ -121,9 +158,33 @@
 			 		for (var i = 0; i < boxes.length; i++) 
 			 		{
 			 			//boxes[i].style.borderRadius = scrollTop / blocksMargin * 100 / 2 + "%";
-			 			boxes[i].style.width = 200 + scrollTop / blocksMargin * 100 + "px";
-			 			boxes[i].style.height = 200 - scrollTop / blocksMargin * 100 + "px";
+			 			//boxes[i].style.width = 200 + scrollTop / blocksMargin * 100 + "px";
+			 			//boxes[i].style.height = 200 - scrollTop / blocksMargin * 100 + "px";
 			 		}
+			 	}
+
+			 	if (scrollTop > windowHeight)
+			 	{
+			 		//secondDiv.style.position = "fixed";
+			 		//secondDiv.style.top = 0;
+			 		//thirdDiv.style.top = windowHeight + "px";
+			 		secondDiv.setAttribute("class", "fixed-tile");
+			 		thirdDiv.style.marginTop = windowHeight + "px";
+			 		secondDiv.style.backgroundPosition = scrollTop / windowHeight * 100 - 100 * 2 + "%";
+			 	}
+			 	else
+			 		secondDiv.setAttribute("class", "moveTile");
+
+			 	if (scrollTop > windowHeight * 2)
+			 	{
+			 		secondDiv.setAttribute("class", "full-tile");
+			 		secondDiv.style.marginTop = windowHeight + "px";
+			 		thirdDiv.style.marginTop = -windowHeight + "px";
+			 	}
+			 	else 
+			 	{
+			 		secondDiv.style.marginTop = 0;
+			 		thirdDiv.style.marginTop = windowHeight + "px";
 			 	}
 			}
 			 
